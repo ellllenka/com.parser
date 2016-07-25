@@ -1,0 +1,106 @@
+<div class="container-fluid">
+    <div class="row">
+        <!--<div class="col-md-2">-->
+            <!--&lt;!&ndash;Sidebar content&ndash;&gt;-->
+
+            <!--<p>-->
+                <!--Search:-->
+                <!--<input ng-model="$ctrl.query" />-->
+            <!--</p>-->
+
+            <!--<p>-->
+                <!--Sort by:-->
+                <!--<select ng-model="$ctrl.orderProp">-->
+                    <!--<option value="name">Alphabetical</option>-->
+                    <!--<option value="age">Newest</option>-->
+                <!--</select>-->
+            <!--</p>-->
+
+        <!--</div>-->
+        <div class="col-md-10">
+            <!--Body content-->
+
+            <ul class="matches">
+                <li ng-repeat="match in $ctrl.matches"
+                    class="thumbnail match-list-item">
+
+                    <a href="#!/matches/{{match.id}}">{{match.name}}</a>
+                    <!--<p>{{phone.snippet}}</p>-->
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<!--<li ng-repeat="match in $ctrl.matches | filter:$ctrl.query | orderBy:$ctrl.orderProp"-->
+
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<meta charset="utf-8">-->
+<!--<title>Результаты парсинга</title>-->
+<!--<link rel="stylesheet" href="app.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Первая категория</h1>-->
+
+<!--<div class="table">-->
+<!--<div class="row">-->
+<!--<div class="cell">Команда 1</div>-->
+<!--<div class="cell">Команда 2</div>-->
+<!--<div class="cell">Общ. анализ</div>-->
+<!--<div class="cell">Анализ 1 тайма</div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<h1>Вторая категория</h1>-->
+
+<!--<div class="table">-->
+<!--<div class="row">-->
+<!--<div class="cell">Команда 1</div>-->
+<!--<div class="cell">Команда 2</div>-->
+<!--<div class="cell">Общ. анализ</div>-->
+<!--<div class="cell">Анализ 1 тайма</div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--<div class="cell"></div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->

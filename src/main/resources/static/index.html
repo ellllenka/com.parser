@@ -1,0 +1,101 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+    <!--<meta charset="utf-8">-->
+    <!--<title>Результаты парсинга</title>-->
+    <!--<link rel="stylesheet" href="app.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Первая категория</h1>-->
+
+<!--<div class="table">-->
+    <!--<div class="row">-->
+        <!--<div class="cell">Команда 1</div>-->
+        <!--<div class="cell">Команда 2</div>-->
+        <!--<div class="cell">Общ. анализ</div>-->
+        <!--<div class="cell">Анализ 1 тайма</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--<h1>Вторая категория</h1>-->
+
+<!--<div class="table">-->
+    <!--<div class="row">-->
+        <!--<div class="cell">Команда 1</div>-->
+        <!--<div class="cell">Команда 2</div>-->
+        <!--<div class="cell">Общ. анализ</div>-->
+        <!--<div class="cell">Анализ 1 тайма</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+        <!--<div class="cell"></div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!doctype html>
+<html lang="en" ng-app="parserApp">
+<head>
+    <meta charset="utf-8">
+    <title>Result</title>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="app.css" />
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="app.module.js"></script>
+    <script src="app.config.js"></script>
+    <script src="core/core.module.js"></script>
+    <script src="core/match/match.module.js"></script>
+    <script src="core/match/match.service.js"></script>
+    <script src="match-list/match-list.module.js"></script>
+    <script src="match-list/match-list.component.js"></script>
+    <script src="match-detail/match-detail.module.js"></script>
+    <script src="match-detail/match-detail.component.js"></script>
+</head>
+<body>
+
+<div class="view-container">
+    <div ng-view class="view-frame"></div>
+</div>
+
+</body>
+</html>

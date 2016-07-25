@@ -1,0 +1,26 @@
+div {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid black;;
+}
+
+.table {
+    display: table;
+    /*background: lightblue;*/
+    /*border-color: black;*/
+    padding: 0;
+    border-spacing: 0px;
+}
+
+.row {
+    /*background: lightblue;*/
+    /*border-color: black;*/
+    display:table-row;
+}
+
+.cell {
+    background: white;
+    border-color: black;
+    display:table-cell;
+    width: 150px;
+}
