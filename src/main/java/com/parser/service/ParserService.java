@@ -1,6 +1,9 @@
 package com.parser.service;
 
-import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
@@ -23,38 +26,29 @@ public class ParserService {
     @Autowired
     ParserRepository repository;
 
-
-    public boolean chooseClass(HtmlTableRow sr){
+    private boolean chooseClass(HtmlTableRow sr){
         return !sr.getAttribute("class").equals("sjt1") &&
                 !sr.getAttribute("class").equals("sjt2") &&
                 !sr.getAttribute("class").equals("sjt3") &&
                 !sr.getAttribute("class").equals("sjt4");
     }
-    public boolean chooseYears(HtmlTableRow sr){
+    private boolean checkYears(HtmlTableRow sr, int parseYears){
         Calendar c = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
         try {
-            c.setTime(formatter.parse(sr.getCell(1).asText()));
+            c.setTime(formatter.parse(sr.getCell(1).getTextContent()));
         } catch (ParseException e1) {
             e1.printStackTrace();
         }
-        return c.get(Calendar.YEAR) >= (c.get(Calendar.YEAR)-3);
+        return c.get(Calendar.YEAR) >= (c.get(Calendar.YEAR)-parseYears);
     }
 
-//    public int countZeroResult(List<HtmlTableRow> scoresRow, Integer sumZero, Integer cellNumber) {
-//        sumZero = 0;
-//        for (HtmlTableRow srt : scoresRow) {
-//            if (chooseClass(srt)) continue;
-//            if (chooseYears(srt)) {
-//                if (srt.getCell(cellNumber).asText().equals("0-0")) {
-//                    sumZero++;
-//                }
-//            }
-//        }
-//        return sumZero;
-//    }
 
     public void startParsing() {
+
+
+
+
         final String JS_CALL_HOME = "showTS('A',1)";
         final String JS_CALL_AWAY = "showTS('B',1)";
 
@@ -86,7 +80,7 @@ public class ParserService {
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@class='qdwj1']//tr"));  // 1-й шаг
                 for (HtmlTableRow sr: scoresRow) {
                     if (chooseClass(sr)) continue;
-                    if (chooseYears(sr)){ //исключили матчи старше 3 лет
+                    if (checkYears(sr, 3)){ //исключили матчи старше 3 лет
                         if (!sr.getCell(3).asText().equals("0-0")){ //исключили общ.результат 0-0
                             if (sr.getCell(9).asText().equals("0-0")) {      //выбрали td без класса
                                 sumZero1stTime1++;
@@ -112,53 +106,43 @@ public class ParserService {
 //                sumZeroHome = countZeroResult(scoresRowHome, sumZeroHome, 3);
                 for (HtmlTableRow srt : scoresRowTotal1) {
                     if (chooseClass(srt)) continue;
-                    if (chooseYears(srt)) {
-                        if (srt.getCell(3).asText().equals("0-0")) {
+                    if (checkYears(srt, 3)) {
+                        if (srt.getCell(3).getTextContent().equals("0-0")) {
                             sumZeroTotal1++;
+                        }
+                        if (sumZeroTotal1 < 2) {
+                            if (srt.getCell(10).getTextContent().equals("0-0")) {
+                                sumZero1stTimeTotal1++;
+                            }
+                            if (sumZero1stTimeTotal1 > 12) {
+                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает в I категорию");
+                            } else if (sumZero1stTimeTotal1 <= 12) {
+                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает вo II категорию");
+                            }
                         }
                     }
                 }
                 for (HtmlTableRow srh : scoresRowHome) {
                     if (chooseClass(srh)) continue;
-                    if (chooseYears(srh)) {
-                        if (srh.getCell(3).asText().equals("0-0")) {
+                    if (checkYears(srh, 3)) {
+                        if (srh.getCell(3).getTextContent().equals("0-0")) {
                             sumZeroHome++;
                         }
-                    }
-                }
-
-
-                if (sumZeroTotal1 < 2 && sumZeroHome < 2) {
-//                    sumZero1stTimeTotal1 = countZeroResult(scoresRowTotal1, sumZero1stTimeTotal1, 10);
-//                    sumZero1stTimeHome = countZeroResult(scoresRowHome, sumZero1stTimeHome, 10);
-                    for (HtmlTableRow srt : scoresRowTotal1) {
-                        if (chooseClass(srt)) continue;
-                        if (chooseYears(srt)) {
-                            if (srt.getCell(10).asText().equals("0-0")) {
-                                sumZero1stTimeTotal1++;
-                            }
-                        }
-                    }
-                    for (HtmlTableRow srh : scoresRowHome) {
-                        if (chooseClass(srh)) continue;
-                        if (chooseYears(srh)) {
-                            if (srh.getCell(10).asText().equals("0-0")) {
+                        if (sumZeroHome < 2) {
+                            if (srh.getCell(10).getTextContent().equals("0-0")) {
                                 sumZero1stTimeHome++;
                             }
+                            if (sumZero1stTimeHome > 12) {
+                                System.out.println("матч " + srh.getCell(2).asText() + " - " + srh.getCell(4).asText() + " попадает в I категорию");
+                            } else if (sumZero1stTimeHome <= 12) {
+                                System.out.println("матч " + srh.getCell(2).asText() + " - " + srh.getCell(4).asText() + " попадает вo II категорию");
+                            }
                         }
-                    }
 
-                    if (sumZero1stTimeTotal1 + sumZero1stTimeHome > 12){
-                        for (HtmlTableRow srt : scoresRowTotal1) {
-                            System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает в I категорию");
-                        }
-                    }
-                    if (sumZero1stTimeTotal1 + sumZero1stTimeHome <= 12){
-                        for (HtmlTableRow srt : scoresRowTotal1) {
-                            System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает вo II категорию");
-                        }
                     }
                 }
+
+
 
 
 
@@ -169,76 +153,51 @@ public class ParserService {
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
                 HtmlPage pageWithAwayHistory = (HtmlPage) page1.executeJavaScript(JS_CALL_AWAY).getNewPage();
                 List<HtmlTableRow> scoresRowAway = ((List<HtmlTableRow>) pageWithAwayHistory.getByXPath("//Table[@id='tbTeamHistory_B_away']//tr")); //????????????? only 2 components
-//                sumZeroTotal2 = countZeroResult(scoresRowTotal2, sumZeroTotal2, 3);
-//                sumZeroAway = countZeroResult(scoresRowAway, sumZeroAway, 3);
                 for (HtmlTableRow srt : scoresRowTotal2) {
                     if (chooseClass(srt)) continue;
-                    if (chooseYears(srt)) {
-                        if (srt.getCell(3).asText().equals("0-0")) {
+                    if (checkYears(srt, 3)) {
+                        if (srt.getCell(3).getTextContent().equals("0-0")) {
                             sumZeroTotal2++;
+                        }
+                        if (sumZeroTotal2 < 2) {
+                            if (srt.getCell(10).getTextContent().equals("0-0")) {
+                                sumZero1stTimeTotal2++;
+                            }
+                            if (sumZero1stTimeTotal2 > 12) {
+                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает в I категорию");
+                            } else if (sumZero1stTimeTotal2 <= 12) {
+                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает вo II категорию");
+                            }
                         }
                     }
                 }
                 for (HtmlTableRow sra : scoresRowAway) {
                     if (chooseClass(sra)) continue;
-                    if (chooseYears(sra)) {
-                        if (sra.getCell(3).asText().equals("0-0")) {
+                    if (checkYears(sra, 3)) {
+                        if (sra.getCell(3).getTextContent().equals("0-0")) {
                             sumZeroAway++;
                         }
-                    }
-                }
-
-                if (sumZeroTotal2 < 2 && sumZeroAway < 2){
-//                    sumZero1stTimeTotal2 = countZeroResult(scoresRowTotal2, sumZero1stTimeTotal2, 10);
-//                    sumZero1stTimeAway = countZeroResult(scoresRowAway, sumZero1stTimeAway, 10);
-                    for (HtmlTableRow srt : scoresRowTotal2) {
-                        if (chooseClass(srt)) continue;
-                        if (chooseYears(srt)) {
-                            if (srt.getCell(10).asText().equals("0-0")) {
-                                sumZero1stTimeTotal2++;
-                            }
-                        }
-                    }
-                    for (HtmlTableRow sra : scoresRowAway) {
-                        if (chooseClass(sra)) continue;
-                        if (chooseYears(sra)) {
-                            if (sra.getCell(10).asText().equals("0-0")) {
+                        if (sumZeroAway < 2) {
+                            if (sra.getCell(10).getTextContent().equals("0-0")) {
                                 sumZero1stTimeAway++;
                             }
+                            if (sumZero1stTimeAway > 12) {
+                                System.out.println("матч " + sra.getCell(2).asText() + " - " + sra.getCell(4).asText() + " попадает в I категорию");
+                            } else if (sumZero1stTimeAway <= 12) {
+                                System.out.println("матч " + sra.getCell(2).asText() + " - " + sra.getCell(4).asText() + " попадает вo II категорию");
+                            }
                         }
-                    }
 
-                    if (sumZero1stTimeTotal2 + sumZero1stTimeAway > 12){
-                        for (HtmlTableRow srt : scoresRowTotal2) {
-                            System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает в I категорию");
-                        }
-                    }
-                    if (sumZero1stTimeTotal2 + sumZero1stTimeAway <= 12){
-                        for (HtmlTableRow srt : scoresRowTotal2) {
-                            System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает вo II категорию");
-                        }
                     }
                 }
-
-
-
-
-
-
-
-
             }
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-    }
 
-    public Match getMatch (Date date){
-        return repository.findOne(date);
+    }
+    public List<Match> getMatches (Date date) {
+        return repository.findByDate(date);
     }
 }

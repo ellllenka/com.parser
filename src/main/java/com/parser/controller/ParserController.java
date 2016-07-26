@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lena on 24.07.16.
@@ -20,8 +21,8 @@ public class ParserController {
 
     @RequestMapping(value = "/match", method = RequestMethod.GET)
     @ResponseBody
-    public Match getAction (Date date) {
-        return service.getMatch(date);
+    public List<Match> getMatches (Date date) {
+        return service.getMatches(date);
     }
 
     @RequestMapping(value = "/match", method = RequestMethod.PUT)
