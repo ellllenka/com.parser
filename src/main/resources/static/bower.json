@@ -1,0 +1,17 @@
+{
+  "name": "parser",
+  "homepage": "https://github.com/ellllenka/com.parser",
+  "authors": [
+    "lena <lena-gobova@yandex.u>"
+  ],
+  "description": "parser",
+  "main": "parser",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
