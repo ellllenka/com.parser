@@ -3,6 +3,7 @@ package com.parser.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Map;
 
 /**
  * Created by lena on 30.06.16.
@@ -16,13 +17,14 @@ public class Match {
     String name2;
     Integer zeroMatches;
     Integer zeroFirstTime;
+    Integer category;
 
-    public Match(Integer id, String name1, String name2, Integer zeroFirstTime, Integer zeroMatches) {
-        this.id = id;
+    public Match(String name1, String name2, Map<String, Integer> zeroResults) {
         this.name1 = name1;
         this.name2 = name2;
-        this.zeroFirstTime = zeroFirstTime;
-        this.zeroMatches = zeroMatches;
+        zeroFirstTime = zeroResults.get("zerosInFirstTime");
+        zeroMatches = zeroResults.get("zerosInMatch");
+        category = zeroFirstTime > 12 ? 1 : 2;
     }
 
     public String getName1() {

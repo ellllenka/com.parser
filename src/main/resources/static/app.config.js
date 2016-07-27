@@ -11,13 +11,13 @@
  $locationProvider.hashPrefix('!');
 
  $routeProvider.
- when('/matches', {
- template: '<match-list></match-list>'
- }).
- when('/matches/:matchId', {
- template: '<match-detail></match-detail>'
- }).
- otherwise('/matches');
+  when('/matches', {
+   template: '<match-list></match-list>'
+  }).
+  when('/matches/:matchId', {
+   template: '<match-detail></match-detail>'
+  }).
+  otherwise('/matches');
  }
  ]);
  
