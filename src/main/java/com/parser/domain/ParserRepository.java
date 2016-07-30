@@ -10,7 +10,5 @@ import java.util.Date;
  * Created by lena on 21.07.16.
  */
 public interface ParserRepository extends CrudRepository<Match, Integer> {
-    Match findOne(Date date);
     ArrayList<Match> findByDate(Date date);
-
 }

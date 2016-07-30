@@ -3,6 +3,7 @@ package com.parser.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.sql.Date;
 import java.util.Map;
 
 /**
@@ -18,6 +19,7 @@ public class Match {
     Integer zeroMatches;
     Integer zeroFirstTime;
     Integer category;
+    Date date;
 
     public Match(String name1, String name2, Map<String, Integer> zeroResults) {
         this.name1 = name1;
