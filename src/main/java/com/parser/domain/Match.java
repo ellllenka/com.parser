@@ -1,5 +1,7 @@
 package com.parser.domain;
 
+import com.parser.service.ParserService;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,7 +26,7 @@ public class Match {
     public Match(String name1, String name2, Map<String, Integer> zeroResults) {
         this.name1 = name1;
         this.name2 = name2;
-        zeroFirstTime = zeroResults.get("zerosInFirstTime");
+        zeroFirstTime = ParserService.sumZerosInHT;   //zeroResults.get("zerosInFirstTime");  //////////////////zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")
         zeroMatches = zeroResults.get("zerosInMatch");
         category = zeroFirstTime > 12 ? 1 : 2;
     }
@@ -55,5 +57,13 @@ public class Match {
 
     public Integer getZeroFirstTime() {
         return zeroFirstTime;
+    }
+
+    public Integer getCategory() {
+        return category;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

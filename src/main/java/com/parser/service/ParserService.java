@@ -24,6 +24,9 @@ import java.util.logging.Level;
 public class ParserService {
     @Autowired
     ParserRepository repository;
+    public static int sumZerosInHT = 0;
+
+    ArrayList<Match> matches = new ArrayList<>();
 
     private boolean checkClass(HtmlTableRow sr){
         return !sr.getAttribute("class").equals("sjt1") &&
@@ -72,6 +75,7 @@ public class ParserService {
 
         final WebClient webClient = createWebClient();
 
+
         try {
             HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
             List<HtmlAnchor> scores = ((List<HtmlAnchor>) page.getByXPath( "//a[@class='bflk']"));
@@ -79,104 +83,64 @@ public class ParserService {
                 String id = score.getHrefAttribute().replace("javascript:ShowDetails_en(","").replace(")","");
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id+"/index.shtml");
 
-                String command1 = "first";
-                String command2 = "second";
+                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent();
+                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent();
+//                String command1 = "first";
+//                String command2 = "second";
 
                 Integer sumZero1stTime1 = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@class='qdwj1']//tr"));  // 1-й шаг
                 for (HtmlTableRow sr: scoresRow) {
                     if (checkClass(sr)) continue;
                     if (checkYears(sr, 3)){ //исключили матчи старше 3 лет
-                        if (!sr.getCell(3).asText().equals("0-0")){ //исключили общ.результат 0-0
-                            if (sr.getCell(9).asText().equals("0-0")) {      //выбрали td без класса
+                        if (!sr.getCell(3).getTextContent().equals("0-0")){ //исключили общ.результат 0-0
+                            if (sr.getCell(9).getTextContent().equals("0-0")) {      //выбрали td без класса
                                 sumZero1stTime1++;
                             }
                         }
                         if (sumZero1stTime1 > 1){
-                            System.out.println("матч " + sr.getCell(2).asText() + " - " + sr.getCell(4).asText() + " попадает в I категорию");
+                            //System.out.println("матч " + sr.getCell(2).getTextContent() + " - " + sr.getCell(4).getTextContent() + " попадает в I категорию");
                         }
                         else if (sumZero1stTime1 <= 1){
-                            System.out.println("матч " + sr.getCell(2).asText() + " - " + sr.getCell(4).asText() + " попадает вo II категорию");
+                            //System.out.println("матч " + sr.getCell(2).getTextContent() + " - " + sr.getCell(4).getTextContent() + " попадает вo II категорию");
                         }
                     }
                 }
 
                 List<HtmlTableRow> scoresRowTotal1 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_A_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches1 = calcZeroResults(scoresRowTotal1);
-                if (zerosInAllMatches1.get("zerosInMatch") < 2) {
-                    Match match = new Match(command1, command2, zerosInAllMatches1);
-                }
-
-
                 HtmlPage pageWithHomeHistory = (HtmlPage) page1.executeJavaScript("showTS('A',1)").getNewPage();
                 List<HtmlTableRow> scoresRowHome = ((List<HtmlTableRow>) pageWithHomeHistory.getByXPath("//Table[@id='tbTeamHistory_A_home']//tr"));
                 Map<String, Integer> zerosInHomeMatches = calcZeroResults(scoresRowHome);
-                if (zerosInHomeMatches.get("zerosInMatch") < 2) {
-                    Match match = new Match(command1, command2, zerosInHomeMatches);
+                if (zerosInAllMatches1.get("zerosInMatch") < 2) {
+                    //Match match = new Match(command1, command2, zerosInAllMatches1);
+                    if (zerosInHomeMatches.get("zerosInMatch") < 2) {
+                        sumZerosInHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
+                        Match match = new Match(command1, command2, zerosInHomeMatches);
+                        if (match.getCategory() == 1)   // зпись в базу данных
+                            return;
+                    }
+
                 }
+
+
+
 
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches2 = calcZeroResults(scoresRowTotal2);
-                if (zerosInAllMatches2.get("zerosInMatch") < 2) {
-                    Match match = new Match(command1, command2, zerosInAllMatches2);
-                }
-
-
                 HtmlPage pageWithAwayHistory = (HtmlPage) page1.executeJavaScript("showTS('B',1)").getNewPage();
                 List<HtmlTableRow> scoresRowAway = ((List<HtmlTableRow>) pageWithAwayHistory.getByXPath("//Table[@id='tbTeamHistory_B_away']//tr"));
                 Map<String, Integer> zerosInAwayMatches = calcZeroResults(scoresRowAway);
-                if (zerosInAwayMatches.get("zerosInMatch") < 2) {
-                    Match match = new Match(command1, command2, zerosInAwayMatches);
+                if (zerosInAllMatches2.get("zerosInMatch") < 2) {
+                    //Match match = new Match(command1, command2, zerosInAllMatches2);
+                    if (zerosInAwayMatches.get("zerosInMatch") < 2) {
+                        sumZerosInHT = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
+                        Match match = new Match(command1, command2, zerosInAwayMatches);
+                    }
                 }
 
 
-//                Integer sumZeroTotal2 = 0;
-//                Integer sumZero1stTimeTotal2 = 0;
-//                List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
 
-
-//                for (HtmlTableRow srt : scoresRowTotal2) {
-//                    if (checkClass(srt)) continue;
-//                    if (checkYears(srt, 3)) {
-//                        if (srt.getCell(3).getTextContent().equals("0-0")) {
-//                            sumZeroTotal2++;
-//                        }
-//                        if (sumZeroTotal2 < 2) {
-//                            if (srt.getCell(10).getTextContent().equals("0-0")) {
-//                                sumZero1stTimeTotal2++;
-//                            }
-//                            if (sumZero1stTimeTotal2 > 12) {
-//                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает в I категорию");
-//                            } else if (sumZero1stTimeTotal2 <= 12) {
-//                                System.out.println("матч " + srt.getCell(2).asText() + " - " + srt.getCell(4).asText() + " попадает вo II категорию");
-//                            }
-//                        }
-//                    }
-//                }
-
-//                Integer sumZeroAway = 0;
-//                Integer sumZero1stTimeAway = 0;
-//                HtmlPage pageWithAwayHistory = (HtmlPage) page1.executeJavaScript("showTS('B',1)").getNewPage();
-//                List<HtmlTableRow> scoresRowAway = ((List<HtmlTableRow>) pageWithAwayHistory.getByXPath("//Table[@id='tbTeamHistory_B_away']//tr"));
-//                for (HtmlTableRow sra : scoresRowAway) {
-//                    if (checkClass(sra)) continue;
-//                    if (checkYears(sra, 3)) {
-//                        if (sra.getCell(3).getTextContent().equals("0-0")) {
-//                            sumZeroAway++;
-//                        }
-//                        if (sumZeroAway < 2) {
-//                            if (sra.getCell(10).getTextContent().equals("0-0")) {
-//                                sumZero1stTimeAway++;
-//                            }
-//                            if (sumZero1stTimeAway > 12) {
-//                                System.out.println("матч " + sra.getCell(2).asText() + " - " + sra.getCell(4).asText() + " попадает в I категорию");
-//                            } else if (sumZero1stTimeAway <= 12) {
-//                                System.out.println("матч " + sra.getCell(2).asText() + " - " + sra.getCell(4).asText() + " попадает вo II категорию");
-//                            }
-//                        }
-//
-//                    }
-//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
