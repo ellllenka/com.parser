@@ -83,8 +83,8 @@ public class ParserService {
                 String id = score.getHrefAttribute().replace("javascript:ShowDetails_en(","").replace(")","");
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id+"/index.shtml");
 
-                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent();
-                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent();
+                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
+                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_bt1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
 //                String command1 = "first";
 //                String command2 = "second";
 
@@ -117,8 +117,11 @@ public class ParserService {
                     if (zerosInHomeMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
                         Match match = new Match(command1, command2, zerosInHomeMatches);
-                        if (match.getCategory() == 1)   // зпись в базу данных
+                        if (match.getCategory() == 1) {   // запись в базу данных
+                            matches.add(match);
+                            repository.save(matches);
                             return;
+                        }
                     }
 
                 }
@@ -136,6 +139,8 @@ public class ParserService {
                     if (zerosInAwayMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
                         Match match = new Match(command1, command2, zerosInAwayMatches);
+                        matches.add(match);
+                        repository.save(matches);
                     }
                 }
 
