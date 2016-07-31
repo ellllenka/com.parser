@@ -23,12 +23,13 @@ public class Match {
     Integer category;
     Date date;
 
-    public Match(String name1, String name2, Map<String, Integer> zeroResults) {
+    public Match(Date date, String name1, String name2, Map<String, Integer> zeroResults) {
+        this.date = date;
         this.name1 = name1;
         this.name2 = name2;
         zeroFirstTime = ParserService.sumZerosInHT;   //zeroResults.get("zerosInFirstTime");  //////////////////zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")
         zeroMatches = zeroResults.get("zerosInMatch");
-        category = zeroFirstTime > 12 ? 1 : 2;
+        category = 2;
     }
 
     public String getName1() {
@@ -65,5 +66,9 @@ public class Match {
 
     public Date getDate() {
         return date;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
     }
 }

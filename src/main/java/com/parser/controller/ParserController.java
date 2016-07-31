@@ -19,7 +19,7 @@ public class ParserController {
     @Autowired
     ParserService service;
 
-    @RequestMapping(value = "/match", method = RequestMethod.GET)
+    @RequestMapping(value = "/matches", method = RequestMethod.GET)
     @ResponseBody
     public List<Match> getMatches (Date date) {
         return service.getMatches(date);

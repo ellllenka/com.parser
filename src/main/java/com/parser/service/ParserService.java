@@ -34,6 +34,8 @@ public class ParserService {
                 !sr.getAttribute("class").equals("sjt3") &&
                 !sr.getAttribute("class").equals("sjt4");
     }
+
+
     private boolean checkYears(HtmlTableRow sr, int parseYears){
         Calendar c = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
@@ -83,10 +85,20 @@ public class ParserService {
                 String id = score.getHrefAttribute().replace("javascript:ShowDetails_en(","").replace(")","");
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id+"/index.shtml");
 
-                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
-                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_bt1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
-//                String command1 = "first";
-//                String command2 = "second";
+//                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
+//                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_bt1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
+                String command1 = "first";
+                String command2 = "second";
+//                Date date = new Date();
+//                Calendar c = Calendar.getInstance();
+//                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+//                score.getByXPath("//td[@class='date']//span"). )
+//
+//                try {
+//                    c.setTime(formatter.parse();
+//                } catch (ParseException e1) {
+//                    e1.printStackTrace();
+//                }
 
                 Integer sumZero1stTime1 = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@class='qdwj1']//tr"));  // 1-й шаг
@@ -116,10 +128,10 @@ public class ParserService {
                     //Match match = new Match(command1, command2, zerosInAllMatches1);
                     if (zerosInHomeMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
-                        Match match = new Match(command1, command2, zerosInHomeMatches);
+                        Match match = new Match(date, command1, command2, zerosInHomeMatches);
+                        match.setCategory((zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")) > 12 ? 1 : 2);
                         if (match.getCategory() == 1) {   // запись в базу данных
-                            matches.add(match);
-                            repository.save(matches);
+                            repository.save(match);
                             return;
                         }
                     }
@@ -138,9 +150,9 @@ public class ParserService {
                     //Match match = new Match(command1, command2, zerosInAllMatches2);
                     if (zerosInAwayMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
-                        Match match = new Match(command1, command2, zerosInAwayMatches);
-                        matches.add(match);
-                        repository.save(matches);
+                        Match match = new Match(date, command1, command2, zerosInAwayMatches);
+                        match.setCategory((zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime")) > 12 ? 1 : 2);
+                        repository.save(match);
                     }
                 }
 
