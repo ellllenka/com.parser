@@ -37,13 +37,16 @@ public class ParserService {
 
     private boolean checkYears(HtmlTableRow sr, int parseYears){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+        int currentYear = c.get(Calendar.YEAR);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
         try {
             c.setTime(formatter.parse(sr.getCell(1).getTextContent()));
         } catch (ParseException e1) {
             e1.printStackTrace();
         }
-        return c.get(Calendar.YEAR) >= (c.get(Calendar.YEAR)-parseYears);
+
+        Calendar.getInstance().get(Calendar.YEAR);
+        return currentYear >= (c.get(Calendar.YEAR)-parseYears);
     }
 
 
@@ -99,10 +102,11 @@ public class ParserService {
                         }
                     }
                 }
-                Match match1 = new Match(currentDate, command1, command2, sumZero1stTime1);
-                if (match1.getCategory() == 1) {   // запись в базу данных
+
+                if (sumZero1stTime1 > 1) {   // запись в базу данных
+                    Match match1 = new Match(currentDate, command1, command2, sumZero1stTime1);
                     repository.save(match1);
-                    return;
+                    continue;
                 }
 
                 List<HtmlTableRow> scoresRowTotal1 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_A_all']//tr")); // 2-й шаг
@@ -117,14 +121,11 @@ public class ParserService {
                         Match match = new Match(currentDate, command1, command2, zerosInHomeMatches);
                         if (match.getCategory() == 1) {   // запись в базу данных
                             repository.save(match);
-                            return;
+                            continue;
                         }
                     }
 
                 }
-
-
-
 
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches2 = calcZeroResults(scoresRowTotal2);
