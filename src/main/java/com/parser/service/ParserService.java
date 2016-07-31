@@ -79,16 +79,13 @@ public class ParserService {
 
         try {
             HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
-            List<HtmlAnchor> scores = ((List<HtmlAnchor>) page.getByXPath( "//a[@class='bflk']"));
-            for (HtmlAnchor score : scores) {
-                String id = score.getHrefAttribute().replace("javascript:ShowDetails_en(","").replace(")","");
-                HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id+"/index.shtml");
+            List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath( "//tr[@class='tbg0' or @class='tbg1']");
+            for (HtmlTableRow score : scores) {
+                String id = score.getAttribute("id");
+                HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
-//                String command1 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_at1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
-//                String command2 = ((List<HtmlTableRow>) score.getByXPath("//tr[@id='bh1579889']//td[@id='t_bt1579889']")).get(0).getTextContent().replace("]", "").replace("[", "").replaceAll("[0-9]", "");
-                String command1 = "first";
-                String command2 = "second";
-
+                String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
+                String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
                 Integer sumZero1stTime1 = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@class='qdwj1']//tr"));  // 1-й шаг
