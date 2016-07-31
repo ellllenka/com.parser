@@ -46,7 +46,7 @@ public class ParserService {
         }
 
         Calendar.getInstance().get(Calendar.YEAR);
-        return currentYear >= (c.get(Calendar.YEAR)-parseYears);
+        return (currentYear - parseYears) <= c.get(Calendar.YEAR) ;
     }
 
 
@@ -91,7 +91,7 @@ public class ParserService {
                 String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
                 Integer sumZero1stTime1 = 0;
-                List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@class='qdwj1']//tr"));  // 1-й шаг
+                List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='jfwj']//tr"));  // 1-й шаг
                 for (HtmlTableRow sr: scoresRow) {
                     if (checkClass(sr)) continue;
                     if (checkYears(sr, 3)){ //исключили матчи старше 3 лет
