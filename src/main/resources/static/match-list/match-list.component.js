@@ -6,7 +6,7 @@ angular.module('matchList').component('matchList', {
     controller: ['Match', function MatchListController(Match) {
         var date = new Date();
         date.setHours(0,0,0,0);
-        this.firstCategory = Match.query({category: 1, date: date});
+        this.firstCategory = Match.query({category: 1});
 
         this.secondCategory = [
             {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12},
