@@ -6,8 +6,7 @@ angular.module('core.match').factory('Match', ['$resource',
             query: {
                 method: 'GET',
                 params: {
-                    category: 'category',
-                    date: 'date'
+                    category: 'category'
                 },
                 isArray: true
             }
