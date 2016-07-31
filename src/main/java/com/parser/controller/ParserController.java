@@ -18,7 +18,6 @@ import java.util.List;
 public class ParserController {
     @Autowired
     ParserService service;
-
     @RequestMapping(value = "/matches", method = RequestMethod.GET)
     @ResponseBody
     public List<Match> getMatches (Date date) {

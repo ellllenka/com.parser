@@ -29,8 +29,15 @@ public class Match {
         this.name2 = name2;
         zeroFirstTime = ParserService.sumZerosInHT;   //zeroResults.get("zerosInFirstTime");  //////////////////zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")
         zeroMatches = zeroResults.get("zerosInMatch");
-        category = 2;
+        category = zeroFirstTime > 12 ? 1 : 2;
     }
+    public Match(Date date, String name1, String name2, int zeroResult) {
+        this.date = date;
+        this.name1 = name1;
+        this.name2 = name2;
+        category = zeroResult > 1 ? 1 : 2;
+    }
+
 
     public String getName1() {
         return name1;
