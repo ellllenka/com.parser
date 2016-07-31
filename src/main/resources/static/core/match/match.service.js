@@ -1,17 +1,14 @@
-/**
- * Created by lena on 23.07.16.
- */
-
-
 'use strict';
 
 angular.module('core.match').factory('Match', ['$resource',
     function ($resource) {
-        return $resource('matches/:matchId.json', {}, {
-            // ??????????
+        return $resource('/matches/:category', {}, {
             query: {
                 method: 'GET',
-                params: {matchId: 'matches'},
+                params: {
+                    category: 'category',
+                    date: 'date'
+                },
                 isArray: true
             }
         });

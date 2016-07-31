@@ -104,8 +104,8 @@ public class ParserService {
                 }
 
                 if (sumZero1stTime1 > 1) {   // запись в базу данных
-                    Match match1 = new Match(currentDate, command1, command2, sumZero1stTime1);
-                    repository.save(match1);
+                    Match match = new Match(currentDate, command1, command2, sumZero1stTime1);
+                    repository.save(match);
                     continue;
                 }
 
@@ -140,18 +140,13 @@ public class ParserService {
                         repository.save(match);
                     }
                 }
-
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-    public List<Match> getMatches (Date date) {
-        return repository.findByDate(date);
+    public List<Match> getMatches (Integer category, Date date) {
+        return repository.findByCategoryAndDate(category, date);
     }
 
     private WebClient createWebClient(){

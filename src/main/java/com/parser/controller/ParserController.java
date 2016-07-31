@@ -4,9 +4,7 @@ import com.parser.domain.Match;
 import com.parser.service.ParserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -18,10 +16,11 @@ import java.util.List;
 public class ParserController {
     @Autowired
     ParserService service;
-    @RequestMapping(value = "/matches", method = RequestMethod.GET)
+    @RequestMapping(value = "/matches/{category}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Match> getMatches (Date date) {
-        return service.getMatches(date);
+    public List<Match> getMatches (@PathVariable Integer category) {
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        return service.getMatches(category, date);
     }
 
     @RequestMapping(value = "/match", method = RequestMethod.PUT)
