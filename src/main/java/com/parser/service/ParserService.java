@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.logging.Level;
 
 /**
@@ -26,7 +27,7 @@ public class ParserService {
     ParserRepository repository;
     public static int sumZerosInHT = 0;
 
-    ArrayList<Match> matches = new ArrayList<>();
+    private java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
 
     private boolean checkClass(HtmlTableRow sr){
         return !sr.getAttribute("class").equals("sjt1") &&
@@ -128,7 +129,7 @@ public class ParserService {
                     //Match match = new Match(command1, command2, zerosInAllMatches1);
                     if (zerosInHomeMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
-                        Match match = new Match(date, command1, command2, zerosInHomeMatches);
+                        Match match = new Match(currentDate, command1, command2, zerosInHomeMatches);
                         match.setCategory((zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")) > 12 ? 1 : 2);
                         if (match.getCategory() == 1) {   // запись в базу данных
                             repository.save(match);
@@ -150,7 +151,7 @@ public class ParserService {
                     //Match match = new Match(command1, command2, zerosInAllMatches2);
                     if (zerosInAwayMatches.get("zerosInMatch") < 2) {
                         sumZerosInHT = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
-                        Match match = new Match(date, command1, command2, zerosInAwayMatches);
+                        Match match = new Match(currentDate, command1, command2, zerosInAwayMatches);
                         match.setCategory((zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime")) > 12 ? 1 : 2);
                         repository.save(match);
                     }
