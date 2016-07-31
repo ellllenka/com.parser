@@ -1,154 +1,44 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2">Category 1</div>
+        <input type="text" placeholder="Text input" class="col-lg-4" ng-model="$ctrl.query">
+        <div class="col-lg-6"></div>
+    </div>
 
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Command 1</th>
+                <th>Command 2</th>
+                <th>Total</th>
+                <th>First time</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="category in $ctrl.firstCategory | filter:$ctrl.query">
+                <td>{{category.cmd1}}</td>
+                <td>{{category.cmd2}}</td>
+                <td>{{category.total}}</td>
+                <td>{{category.ft}}</td>
+            </tr>
+        </table>
 
-    <h1>Первая категория</h1>
-
-    <table class="table table-bordered">
-        <tr>
-            <td>Команда 1</td>
-            <td>Команда 2</td>
-            <td>Общий анализ</td>
-            <td>Анализ первого тайма</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-
-    <h1>Вторая категория</h1>
-
-
-    <table class="table table-bordered">
-        <tr>
-            <td>Команда 1</td>
-            <td>Команда 2</td>
-            <td>Общий анализ</td>
-            <td>Анализ первого тайма</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-
-
-        <!--<div class="col-md-2">-->
-            <!--&lt;!&ndash;Sidebar content&ndash;&gt;-->
-
-            <!--<p>-->
-                <!--Search:-->
-                <!--<input ng-model="$ctrl.query" />-->
-            <!--</p>-->
-
-            <!--<p>-->
-                <!--Sort by:-->
-                <!--<select ng-model="$ctrl.orderProp">-->
-                    <!--<option value="name">Alphabetical</option>-->
-                    <!--<option value="age">Newest</option>-->
-                <!--</select>-->
-            <!--</p>-->
-
-        <!--</div>-->
-        <!--<div class="col-md-10">-->
-            <!--&lt;!&ndash;Body content&ndash;&gt;-->
-
-            <!--<ul class="matches">-->
-                <!--<li ng-repeat="match in $ctrl.matches"-->
-                    <!--class="thumbnail match-list-item">-->
-
-                    <!--<a href="#!/matches/{{match.id}}">{{match.name}}</a>-->
-                    <!--&lt;!&ndash;<p>{{phone.snippet}}</p>&ndash;&gt;-->
-                <!--</li>-->
-            <!--</ul>-->
-
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-
-<!--<li ng-repeat="match in $ctrl.matches | filter:$ctrl.query | orderBy:$ctrl.orderProp"-->
-
-
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--<meta charset="utf-8">-->
-<!--<title>Результаты парсинга</title>-->
-<!--<link rel="stylesheet" href="app.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Первая категория</h1>-->
-
-<!--<div class="table">-->
-<!--<div class="row">-->
-<!--<div class="cell">Команда 1</div>-->
-<!--<div class="cell">Команда 2</div>-->
-<!--<div class="cell">Общ. анализ</div>-->
-<!--<div class="cell">Анализ 1 тайма</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--<h1>Вторая категория</h1>-->
-
-<!--<div class="table">-->
-<!--<div class="row">-->
-<!--<div class="cell">Команда 1</div>-->
-<!--<div class="cell">Команда 2</div>-->
-<!--<div class="cell">Общ. анализ</div>-->
-<!--<div class="cell">Анализ 1 тайма</div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--<div class="cell"></div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--</body>-->
-<!--</html>-->
+        <h1>Category 2</h1>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Command 1</th>
+                <th>Command 2</th>
+                <th>Total</th>
+                <th>First time</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="category in $ctrl.secondCategory | filter:$ctrl.query">
+                <td>{{category.cmd1}}</td>
+                <td>{{category.cmd2}}</td>
+                <td>{{category.total}}</td>
+                <td>{{category.ft}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

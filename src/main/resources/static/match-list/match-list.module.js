@@ -3,8 +3,8 @@
  */
 
 
- 'use strict';
+'use strict';
 
- // Define the `phoneList` module
- angular.module('matchList', ['core.match']);
+// Define the `phoneList` module
+angular.module('matchList', ['core.match']);
  

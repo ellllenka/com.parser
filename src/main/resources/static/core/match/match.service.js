@@ -3,19 +3,17 @@
  */
 
 
- 'use strict';
+'use strict';
 
- angular.
-    module('core.match').
-    factory('Match', ['$resource',
-    function($resource) {
-    return $resource('matches/:matchId.json', {}, {
-        // ??????????
-    query: {
-    method: 'GET',
-    params: {matchId: 'matches'},
-    isArray: true
+angular.module('core.match').factory('Match', ['$resource',
+    function ($resource) {
+        return $resource('matches/:matchId.json', {}, {
+            // ??????????
+            query: {
+                method: 'GET',
+                params: {matchId: 'matches'},
+                isArray: true
+            }
+        });
     }
-    });
-    }
-    ]);
+]);

@@ -3,13 +3,12 @@
  */
 
 
- 'use strict';
+'use strict';
 
- // Define the `phonecatApp` module
- angular.module('parserApp', [
- 'ngRoute',
- 'core',
- 'matchDetail',
- 'matchList',
- ]);
+// Define the `phonecatApp` module
+angular.module('parserApp', [
+    'ngRoute',
+    'core',
+    'matchList'
+]);
 
