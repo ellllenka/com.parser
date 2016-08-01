@@ -12,15 +12,14 @@ import com.parser.domain.ParserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Future;
 
-/**
- * Created by lena on 21.07.16.
- */
 @Service
 public class ParserService {
     @Autowired
@@ -79,8 +78,8 @@ public class ParserService {
         return result;
     }
 
-
-    public void startParsing() {
+    @Async
+    public Future<Void> startParsing() {
         final WebClient webClient = createWebClient();
 
         try {
@@ -94,11 +93,11 @@ public class ParserService {
                 String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
                 if (checkParsedMatches(currentDate, command1, command2)){
-                    logger.info("parse "+command1+" vs "+command2+" skip");
+                    logger.info("Skip \""+command1+"\" vs \""+command2+"\"");
                     continue;
                 }
 
-                logger.info("parse "+command1+" vs "+command2+" pars");
+                logger.info("Parse \""+command1+"\" vs \""+command2+"\"");
 
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
@@ -157,6 +156,8 @@ public class ParserService {
         }finally {
             logger.info("end parser");
         }
+
+        return null;
     }
 
     public boolean checkParsedMatches(Date date, String command1, String command2){

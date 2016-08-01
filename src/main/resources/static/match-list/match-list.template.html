@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <div class="col-lg-2">Category 1</div>
         <input type="text" placeholder="Text input" class="col-lg-4" ng-model="$ctrl.query">
@@ -16,10 +16,10 @@
             </tr>
             </thead>
             <tr ng-repeat="category in $ctrl.firstCategory | filter:$ctrl.query">
-                <td>{{category.cmd1}}</td>
-                <td>{{category.cmd2}}</td>
-                <td>{{category.total}}</td>
-                <td>{{category.ft}}</td>
+                <td>{{category.command1}}</td>
+                <td>{{category.command2}}</td>
+                <td>{{category.zeroMatches}}</td>
+                <td>{{category.zeroFirstTime}}</td>
             </tr>
         </table>
 
@@ -34,10 +34,10 @@
             </tr>
             </thead>
             <tr ng-repeat="category in $ctrl.secondCategory | filter:$ctrl.query">
-                <td>{{category.cmd1}}</td>
-                <td>{{category.cmd2}}</td>
-                <td>{{category.total}}</td>
-                <td>{{category.ft}}</td>
+                <td>{{category.command1}}</td>
+                <td>{{category.command2}}</td>
+                <td>{{category.zeroMatches}}</td>
+                <td>{{category.zeroFirstTime}}</td>
             </tr>
         </table>
     </div>

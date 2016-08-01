@@ -15,15 +15,16 @@ import java.util.Map;
 public class Match {
     @GeneratedValue
     @Id
-    Integer id;
-    String command1;
-    String command2;
-    Integer zeroMatches;
-    Integer zeroFirstTime;
-    Integer category;
-    Date date;
+    private Integer id;
+    private String command1;
+    private String command2;
+    private Integer zeroMatches;
+    private Integer zeroFirstTime;
+    private Integer category;
+    private Date date;
 
-    public Match(){};
+    public Match()
+    {}
 
     public Match(Date date, String command1, String command2, Map<String, Integer> zeroResults) {
         this.date = date;
@@ -44,23 +45,6 @@ public class Match {
         this.date = date;
         this.command1 = command1;
         this.command2 = command2;
-    }
-
-
-    public String getСommand1() {
-        return command1;
-    }
-
-    public void setСommand1(String command1) {
-        this.command1 = command1;
-    }
-
-    public String getСommand2() {
-        return command2;
-    }
-
-    public void setСommand2(String name2) {
-        this.command2 = name2;
     }
 
     public Integer getZeroMatches() {
@@ -85,5 +69,37 @@ public class Match {
 
     public void setCategory(Integer category) {
         this.category = category;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCommand1() {
+        return command1;
+    }
+
+    public void setCommand1(String command1) {
+        this.command1 = command1;
+    }
+
+    public String getCommand2() {
+        return command2;
+    }
+
+    public void setCommand2(String command2) {
+        this.command2 = command2;
+    }
+
+    public void setZeroFirstTime(Integer zeroFirstTime) {
+        this.zeroFirstTime = zeroFirstTime;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
