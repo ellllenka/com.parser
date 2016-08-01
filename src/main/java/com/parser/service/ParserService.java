@@ -122,8 +122,10 @@ public class ParserService {
 
                 List<HtmlTableRow> scoresRowTotal1 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_A_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches1 = calcZeroResults(scoresRowTotal1);
+
                 HtmlPage pageWithHomeHistory = (HtmlPage) page1.executeJavaScript("showTS('A',1)").getNewPage();
                 List<HtmlTableRow> scoresRowHome = ((List<HtmlTableRow>) pageWithHomeHistory.getByXPath("//Table[@id='tbTeamHistory_A_home']//tr"));
+
                 Map<String, Integer> zerosInHomeMatches = calcZeroResults(scoresRowHome);
                 if (zerosInAllMatches1.get("zerosInMatch") < 2) {
                     //Match match = new Match(command1, command2, zerosInAllMatches1);
@@ -139,6 +141,7 @@ public class ParserService {
 
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches2 = calcZeroResults(scoresRowTotal2);
+
                 HtmlPage pageWithAwayHistory = (HtmlPage) page1.executeJavaScript("showTS('B',1)").getNewPage();
                 List<HtmlTableRow> scoresRowAway = ((List<HtmlTableRow>) pageWithAwayHistory.getByXPath("//Table[@id='tbTeamHistory_B_away']//tr"));
                 Map<String, Integer> zerosInAwayMatches = calcZeroResults(scoresRowAway);
