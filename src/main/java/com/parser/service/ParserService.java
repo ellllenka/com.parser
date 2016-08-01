@@ -136,7 +136,6 @@ public class ParserService {
                             continue;
                         }
                     }
-
                 }
 
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
