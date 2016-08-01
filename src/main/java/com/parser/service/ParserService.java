@@ -162,7 +162,7 @@ public class ParserService {
 
     public boolean checkParsedMatches(Date date, String command1, String command2){
         List<Match> matchFromSQL = repository.findByDateAndCommand1AndCommand2(date, command1, command2) ;
-        return matchFromSQL.isEmpty();
+        return !matchFromSQL.isEmpty();
 
     }
 
