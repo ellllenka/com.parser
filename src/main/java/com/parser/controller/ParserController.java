@@ -23,7 +23,7 @@ public class ParserController {
         return service.getMatches(category, date);
     }
 
-    @RequestMapping(value = "/match", method = RequestMethod.PUT)
+    @RequestMapping(value = "/match", method = RequestMethod.GET)
     @ResponseBody
     public void startParsing() {
         service.startParsing();
