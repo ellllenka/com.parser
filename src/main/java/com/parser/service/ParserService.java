@@ -90,6 +90,9 @@ public class ParserService {
                 String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
                 String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
+                if (checkParsedMatches(currentDate, command1, command2))
+                continue;
+
                 Integer sumZero1stTime1 = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='jfwj']//tr"));  // 1-й шаг
                 for (HtmlTableRow sr: scoresRow) {
@@ -105,6 +108,7 @@ public class ParserService {
 
                 if (sumZero1stTime1 > 1) {   // запись в базу данных
                     Match match = new Match(currentDate, command1, command2, sumZero1stTime1);
+
                     repository.save(match);
                     continue;
                 }
@@ -145,6 +149,17 @@ public class ParserService {
             e.printStackTrace();
         }
     }
+
+    public boolean checkParsedMatches(Date date, String command1, String command2){
+        Match matchFromSQL = findByDateAndCommand1AndCommand2(date, command1, command2);
+        return new Match(currentDate, command1, command2).equals(matchFromSQL);
+
+    }
+
+    public Match findByDateAndCommand1AndCommand2(Date date, String command1, String command2){
+        return repository.findByDateAndCommand1AndCommand2(date, command1, command2) ;
+    }
+
     public List<Match> getMatches (Integer category, Date date) {
         return repository.findByCategoryAndDate(category, date);
     }

@@ -11,4 +11,5 @@ import java.util.Date;
  */
 public interface ParserRepository extends CrudRepository<Match, Integer> {
     ArrayList<Match> findByCategoryAndDate(Integer category, Date date);
+    Match findByDateAndCommand1AndCommand2(Date date, String command1, String command2);
 }

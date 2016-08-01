@@ -16,8 +16,8 @@ public class Match {
     @GeneratedValue
     @Id
     Integer id;
-    String name1;
-    String name2;
+    String command1;
+    String command2;
     Integer zeroMatches;
     Integer zeroFirstTime;
     Integer category;
@@ -25,36 +25,42 @@ public class Match {
 
     public Match(){};
 
-    public Match(Date date, String name1, String name2, Map<String, Integer> zeroResults) {
+    public Match(Date date, String command1, String command2, Map<String, Integer> zeroResults) {
         this.date = date;
-        this.name1 = name1;
-        this.name2 = name2;
+        this.command1 = command1;
+        this.command2 = command2;
         zeroFirstTime = ParserService.sumZerosInHT;   //zeroResults.get("zerosInFirstTime");  //////////////////zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")
         zeroMatches = zeroResults.get("zerosInMatch");
         category = zeroFirstTime > 12 ? 1 : 2;
     }
-    public Match(Date date, String name1, String name2, int zeroResult) {
+    public Match(Date date, String command1, String command2, int zeroResult) {
         this.date = date;
-        this.name1 = name1;
-        this.name2 = name2;
+        this.command1 = command1;
+        this.command2 = command2;
         category = zeroResult > 1 ? 1 : 2;
     }
 
-
-    public String getName1() {
-        return name1;
+    public Match(Date date, String command1, String command2){
+        this.date = date;
+        this.command1 = command1;
+        this.command2 = command2;
     }
 
-    public void setName1(String name1) {
-        this.name1 = name1;
+
+    public String getСommand1() {
+        return command1;
     }
 
-    public String getName2() {
-        return name2;
+    public void setСommand1(String command1) {
+        this.command1 = command1;
     }
 
-    public void setName2(String name2) {
-        this.name2 = name2;
+    public String getСommand2() {
+        return command2;
+    }
+
+    public void setСommand2(String name2) {
+        this.command2 = name2;
     }
 
     public Integer getZeroMatches() {
