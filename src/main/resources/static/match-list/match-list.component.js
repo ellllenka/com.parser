@@ -8,13 +8,9 @@ angular.module('matchList').component('matchList', {
         date.setHours(0,0,0,0);
         this.firstCategory = Match.query({category: 1});
 
-        this.secondCategory = [
-            {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12},
-            {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12},
-            {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12},
-            {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12},
-            {cmd1: 'Команда 1', cmd2: 'Команда 2', total: 10, ft: 12}
-        ]
+        this.secondCategory = Match.query({category: 2});
+
+
     }]
 });
  

@@ -23,6 +23,8 @@ public class Match {
     Integer category;
     Date date;
 
+    public Match(){};
+
     public Match(Date date, String name1, String name2, Map<String, Integer> zeroResults) {
         this.date = date;
         this.name1 = name1;
