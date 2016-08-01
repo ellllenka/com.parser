@@ -9,6 +9,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.parser.domain.Match;
 import com.parser.domain.ParserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ import java.util.*;
 public class ParserService {
     @Autowired
     private ParserRepository repository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ParserService.class);
 
     public static int sumZerosInHT = 0;
 
@@ -77,11 +81,10 @@ public class ParserService {
 
 
     public void startParsing() {
-
         final WebClient webClient = createWebClient();
 
-
         try {
+            logger.info("Start parser");
             HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
             List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath( "//tr[@class='tbg0' or @class='tbg1']");
             for (HtmlTableRow score : scores) {
@@ -90,8 +93,12 @@ public class ParserService {
                 String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
                 String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
-                if (checkParsedMatches(currentDate, command1, command2))
+                if (checkParsedMatches(currentDate, command1, command2)){
+                    logger.info("parse "+command1+" vs "+command2+" skip");
                     continue;
+                }
+
+                logger.info("parse "+command1+" vs "+command2+" pars");
 
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
@@ -148,6 +155,8 @@ public class ParserService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            logger.info("end parser");
         }
     }
 
