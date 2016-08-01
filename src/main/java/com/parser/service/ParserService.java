@@ -22,7 +22,8 @@ import java.util.*;
 @Service
 public class ParserService {
     @Autowired
-    ParserRepository repository;
+    private ParserRepository repository;
+
     public static int sumZerosInHT = 0;
 
     private java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
@@ -85,13 +86,14 @@ public class ParserService {
             List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath( "//tr[@class='tbg0' or @class='tbg1']");
             for (HtmlTableRow score : scores) {
                 String id = score.getAttribute("id");
-                HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
                 String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
                 String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
 
                 if (checkParsedMatches(currentDate, command1, command2))
-                continue;
+                    continue;
+
+                HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
                 Integer sumZero1stTime1 = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='jfwj']//tr"));  // 1-й шаг
@@ -108,7 +110,6 @@ public class ParserService {
 
                 if (sumZero1stTime1 > 1) {   // запись в базу данных
                     Match match = new Match(currentDate, command1, command2, sumZero1stTime1);
-
                     repository.save(match);
                     continue;
                 }
@@ -151,13 +152,9 @@ public class ParserService {
     }
 
     public boolean checkParsedMatches(Date date, String command1, String command2){
-        Match matchFromSQL = findByDateAndCommand1AndCommand2(date, command1, command2);
-        return new Match(currentDate, command1, command2).equals(matchFromSQL);
+        List<Match> matchFromSQL = repository.findByDateAndCommand1AndCommand2(date, command1, command2) ;
+        return matchFromSQL.isEmpty();
 
-    }
-
-    public Match findByDateAndCommand1AndCommand2(Date date, String command1, String command2){
-        return repository.findByDateAndCommand1AndCommand2(date, command1, command2) ;
     }
 
     public List<Match> getMatches (Integer category, Date date) {

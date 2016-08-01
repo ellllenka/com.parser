@@ -5,11 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-/**
- * Created by lena on 21.07.16.
- */
+
 public interface ParserRepository extends CrudRepository<Match, Integer> {
+
     ArrayList<Match> findByCategoryAndDate(Integer category, Date date);
-    Match findByDateAndCommand1AndCommand2(Date date, String command1, String command2);
+
+    List<Match> findByDateAndCommand1AndCommand2(Date date, String command1, String command2);
 }
