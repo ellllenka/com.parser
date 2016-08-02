@@ -27,7 +27,7 @@ public class ParserService {
 
     private static final Logger logger = LoggerFactory.getLogger(ParserService.class);
 
-    public static int sumZerosInHT = 0;
+    public static int sumZeros = 0;
 
     private java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
 
@@ -101,58 +101,79 @@ public class ParserService {
 
                 HtmlPage page1 = webClient.getPage("http://analyse.7msport.com/"+id.substring(2)+"/index.shtml");
 
-                Integer sumZero1stTime1 = 0;
+                int sumZero1stTime1 = 0;
+                int sumZeroMatch = 0;
                 List<HtmlTableRow> scoresRow = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='jfwj']//tr"));  // 1-й шаг
                 for (HtmlTableRow sr: scoresRow) {
                     if (checkClass(sr)) continue;
                     if (checkYears(sr, 3)){ //исключили матчи старше 3 лет
-                        if (!sr.getCell(3).getTextContent().equals("0-0")){ //исключили общ.результат 0-0
-                            if (sr.getCell(9).getTextContent().equals("0-0")) {      //выбрали td без класса
-                                sumZero1stTime1++;
-                            }
+                        if (!sr.getCell(3).getTextContent().equals("0-0")){
+                            sumZeroMatch++;
+                            break;
+                        }
+                        if (sr.getCell(9).getTextContent().equals("0-0")){
+                            sumZero1stTime1++;
                         }
                     }
                 }
 
-                if (sumZero1stTime1 > 1) {   // запись в базу данных
-                    Match match = new Match(currentDate, command1, command2, sumZero1stTime1);
-                    repository.save(match);
+                if (sumZeroMatch > 0){
+                    repository.save(new Match(currentDate, command1, command2, 0));
                     continue;
                 }
+
+                int category = sumZero1stTime1 > 1 ? 1 : 2;
 
                 List<HtmlTableRow> scoresRowTotal1 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_A_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches1 = calcZeroResults(scoresRowTotal1);
 
+                if (zerosInAllMatches1.get("zerosInMatch") > 2) {
+                    repository.save(new Match(currentDate, command1, command2, 0));
+                    continue;
+                }
+
                 HtmlPage pageWithHomeHistory = (HtmlPage) page1.executeJavaScript("showTS('A',1)").getNewPage();
                 List<HtmlTableRow> scoresRowHome = ((List<HtmlTableRow>) pageWithHomeHistory.getByXPath("//Table[@id='tbTeamHistory_A_home']//tr"));
-
                 Map<String, Integer> zerosInHomeMatches = calcZeroResults(scoresRowHome);
-                if (zerosInAllMatches1.get("zerosInMatch") < 2) {
-                    //Match match = new Match(command1, command2, zerosInAllMatches1);
-                    if (zerosInHomeMatches.get("zerosInMatch") < 2) {
-                        sumZerosInHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
-                        Match match = new Match(currentDate, command1, command2, zerosInHomeMatches);
-                        if (match.getCategory() == 1) {   // запись в базу данных
-                            repository.save(match);
-                            continue;
-                        }
-                    }
+                if (zerosInHomeMatches.get("zerosInMatch") > 2) {
+                    repository.save(new Match(currentDate, command1, command2, 0));
+                    continue;
                 }
+
+                sumZeros = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
+
+                int curCategory = sumZeros > 12 ? 1 : 2;
+                category = Math.min(category, curCategory);
 
                 List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
                 Map<String, Integer> zerosInAllMatches2 = calcZeroResults(scoresRowTotal2);
+                if (zerosInAllMatches2.get("zerosInMatch") > 2) {
+                    repository.save(new Match(currentDate, command1, command2, 0));
+                    continue;
+                }
 
                 HtmlPage pageWithAwayHistory = (HtmlPage) page1.executeJavaScript("showTS('B',1)").getNewPage();
                 List<HtmlTableRow> scoresRowAway = ((List<HtmlTableRow>) pageWithAwayHistory.getByXPath("//Table[@id='tbTeamHistory_B_away']//tr"));
                 Map<String, Integer> zerosInAwayMatches = calcZeroResults(scoresRowAway);
-                if (zerosInAllMatches2.get("zerosInMatch") < 2) {
-                    //Match match = new Match(command1, command2, zerosInAllMatches2);
-                    if (zerosInAwayMatches.get("zerosInMatch") < 2) {
-                        sumZerosInHT = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
-                        Match match = new Match(currentDate, command1, command2, zerosInAwayMatches);
-                        repository.save(match);
-                    }
+                if (zerosInAwayMatches.get("zerosInMatch") > 2) {
+                    repository.save(new Match(currentDate, command1, command2, 0));
+                    continue;
                 }
+
+
+                sumZeros = zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
+
+                int totalZeros = zerosInAllMatches1.get("zerosInMatch") + zerosInHomeMatches.get("zerosInMatch") +
+                        zerosInAllMatches2.get("zerosInMatch") + zerosInAwayMatches.get("zerosInMatch");
+
+                int totaZerosHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime") +
+                        zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime");
+
+                curCategory = sumZeros > 12 ? 1 : 2;
+                category = Math.min(category, curCategory);
+
+                Match match = new Match(currentDate, command1, command2, category, totalZeros, totaZerosHT);
+                repository.save(match);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,7 +184,7 @@ public class ParserService {
         return null;
     }
 
-    public boolean checkParsedMatches(Date date, String command1, String command2){
+    private boolean checkParsedMatches(Date date, String command1, String command2){
         List<Match> matchFromSQL = repository.findByDateAndCommand1AndCommand2(date, command1, command2) ;
         return !matchFromSQL.isEmpty();
 

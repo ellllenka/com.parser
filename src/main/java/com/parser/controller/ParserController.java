@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by lena on 24.07.16.
- */
 @Controller
 public class ParserController {
     @Autowired

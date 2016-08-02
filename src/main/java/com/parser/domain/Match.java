@@ -8,9 +8,6 @@ import javax.persistence.Id;
 import java.sql.Date;
 import java.util.Map;
 
-/**
- * Created by lena on 30.06.16.
- */
 @Entity
 public class Match {
     @GeneratedValue
@@ -26,25 +23,19 @@ public class Match {
     public Match()
     {}
 
-    public Match(Date date, String command1, String command2, Map<String, Integer> zeroResults) {
+    public Match(Date date, String command1, String command2, int category, int zeroMatches, int zeroFirstTime) {
         this.date = date;
         this.command1 = command1;
         this.command2 = command2;
-        zeroFirstTime = ParserService.sumZerosInHT;   //zeroResults.get("zerosInFirstTime");  //////////////////zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime")
-        zeroMatches = zeroResults.get("zerosInMatch");
-        category = zeroFirstTime > 12 ? 1 : 2;
+        this.zeroFirstTime = zeroFirstTime;
+        this.zeroMatches = zeroMatches;
+        this.category = category;
     }
-    public Match(Date date, String command1, String command2, int zeroResult) {
+    public Match(Date date, String command1, String command2, int category) {
         this.date = date;
         this.command1 = command1;
         this.command2 = command2;
-        category = zeroResult > 1 ? 1 : 2;
-    }
-
-    public Match(Date date, String command1, String command2){
-        this.date = date;
-        this.command1 = command1;
-        this.command2 = command2;
+        this.category = category;
     }
 
     public Integer getZeroMatches() {
