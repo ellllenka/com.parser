@@ -2,47 +2,51 @@
     <div class="row">
         <div class="col-lg-2">Category 1</div>
         <input type="text" placeholder="Text input" class="col-lg-4" ng-model="$ctrl.query">
-        <div class="col-lg-6">
-            <a ng-click="start parsing()">Start parsing</a>
+        <div class="col-lg-3">
+            <a ng-click="$ctrl.startParsing()" href="">Start parsing</a>
         </div>
-
-
+        <div class="col-lg-3">
+            <a ng-click="$ctrl.exportData()" href="">Save to Excel</a>
+        </div>
     </div>
 
     <div class="row">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Command 1</th>
-                <th>Command 2</th>
-                <th>Total</th>
-                <th>First time</th>
-            </tr>
-            </thead>
-            <tr ng-repeat="category in $ctrl.firstCategory | filter:$ctrl.query">
-                <td>{{category.command1}}</td>
-                <td>{{category.command2}}</td>
-                <td>{{category.zeroMatches}}</td>
-                <td>{{category.zeroFirstTime}}</td>
-            </tr>
-        </table>
-
+        <div id="category1">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Command 1</th>
+                    <th>Command 2</th>
+                    <th>Total</th>
+                    <th>First time</th>
+                </tr>
+                </thead>
+                <tr ng-repeat="category in $ctrl.firstCategory | filter:$ctrl.query">
+                    <td>{{category.command1}}</td>
+                    <td>{{category.command2}}</td>
+                    <td>{{category.zeroMatches}}</td>
+                    <td>{{category.zeroFirstTime}}</td>
+                </tr>
+            </table>
+        </div>
         <h1>Category 2</h1>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Command 1</th>
-                <th>Command 2</th>
-                <th>Total</th>
-                <th>First time</th>
-            </tr>
-            </thead>
-            <tr ng-repeat="category in $ctrl.secondCategory | filter:$ctrl.query">
-                <td>{{category.command1}}</td>
-                <td>{{category.command2}}</td>
-                <td>{{category.zeroMatches}}</td>
-                <td>{{category.zeroFirstTime}}</td>
-            </tr>
-        </table>
+        <div id="category2">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Command 1</th>
+                    <th>Command 2</th>
+                    <th>Total</th>
+                    <th>First time</th>
+                </tr>
+                </thead>
+                <tr ng-repeat="category in $ctrl.secondCategory | filter:$ctrl.query">
+                    <td>{{category.command1}}</td>
+                    <td>{{category.command2}}</td>
+                    <td>{{category.zeroMatches}}</td>
+                    <td>{{category.zeroFirstTime}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>

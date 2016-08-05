@@ -3,36 +3,28 @@
 // Register `phoneList` component, along with its associated controller and template
 angular.module('matchList').component('matchList', {
     templateUrl: 'match-list/match-list.template.html',
-    controller: ['Match', function MatchListController(Match) {
+    controller: ['$http', 'Match', function MatchListController($http, Match) {
         var date = new Date();
-        date.setHours(0,0,0,0);
-        this.firstCategory = Match.query({category: 1});
+        date.setHours(0, 0, 0, 0);
 
+        this.firstCategory = Match.query({category: 1});
         this.secondCategory = Match.query({category: 2});
 
-        this.startParsing = function() {
-            $http({
-            method: 'GET',
-            url: '/match'
-        }).then(function successCallback(response) {
+        this.startParsing = function(){
+            $http({method: 'GET', url: '/match'}).then(function(){}, function(){});
+        };
 
-            }, function errorCallback(response) {
+        this.exportData = function () {
+            var cat1 = new Blob([document.getElementById('category1').innerHTML], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+            });
+            saveAs(cat1, "Category1.xls");
 
-            })};
+            var cat2 = new Blob([document.getElementById('category2').innerHTML], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+            });
 
+            saveAs(cat2, "Category2.xls");
+        };
     }]
 });
-
-/*
- $http({
- method: 'GET',
- url: '/someUrl'
- }).then(function successCallback(response) {
- // this callback will be called asynchronously
- // when the response is available
- }, function errorCallback(response) {
- // called asynchronously if an error occurs
- // or server returns response with an error status.
- });
- */
- 
