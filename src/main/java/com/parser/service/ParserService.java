@@ -79,33 +79,34 @@ public class ParserService {
     }
 
     @Async
-    public Future<Void> startParsing() throws ParseException {
+    public Future<Void> startParsing() throws ParseException, IOException {
         if (isRunning)
             return null;
 
         isRunning = true;
 
+        final WebClient webClient = createWebClient();
+
+        logger.info("Start parser");
+        HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
+        int attempt = 1;
         while (totalNumber < currentNumber || currentNumber == 0) {
+            logger.info("Attempt number "+attempt);
+            attempt++;
             try {
-                parse();
+                parse(webClient, page);
             } catch (IOException e) {
                 logger.error("Error when parsing", e);
             } finally {
                 isRunning = false;
                 logger.info("end parser");
             }
-
-
         }
 
         return null;
     }
 
-    private void parse() throws IOException, ParseException {
-        final WebClient webClient = createWebClient();
-
-        logger.info("Start parser");
-        HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
+    private void parse(WebClient webClient, HtmlPage page) throws IOException, ParseException {
         List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath("//tr[@class='tbg0' or @class='tbg1']");
         totalNumber = scores.size();
         logger.info("Total number of matches is " + scores.size());
