@@ -19,11 +19,13 @@ public class Match {
     private Integer zeroFirstTime;
     private Integer category;
     private Date date;
+    private String time; //the start time of the match
 
     public Match()
     {}
 
-    public Match(Date date, String command1, String command2, int category, int zeroMatches, int zeroFirstTime) {
+    public Match(Date date, String command1, String command2, int category, int zeroMatches, int zeroFirstTime, String time) {
+        this.time = time;
         this.date = date;
         this.command1 = command1;
         this.command2 = command2;
@@ -36,6 +38,14 @@ public class Match {
         this.command1 = command1;
         this.command2 = command2;
         this.category = category;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public Integer getZeroMatches() {

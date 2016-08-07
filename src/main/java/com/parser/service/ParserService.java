@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTableDataCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.parser.domain.Match;
 import com.parser.domain.ParserRepository;
@@ -79,7 +80,7 @@ public class ParserService {
     }
 
     @Async
-    public Future<Void> startParsing() throws ParseException, IOException {
+    public Future<Void> startParsing() throws ParseException {
         if (isRunning)
             return null;
 
@@ -88,21 +89,38 @@ public class ParserService {
         final WebClient webClient = createWebClient();
 
         logger.info("Start parser");
-        HtmlPage page = webClient.getPage("http://live2.7msport.com/"); // заходим на сайт
         int attempt = 1;
-        while (totalNumber < currentNumber || currentNumber == 0) {
+        HtmlPage page = null; // заходим на сайт
+        do{
+            try {
+                logger.info("Opening main page, attempt "+attempt);
+                attempt++;
+                page = webClient.getPage("http://live2.7msport.com/");
+            } catch (IOException e) {
+                logger.error("Error when opening main page", e);
+            }
+        }while (page == null);
+
+        attempt = 1;
+        while (totalNumber > currentNumber || currentNumber == 0) {
             logger.info("Attempt number "+attempt);
             attempt++;
+            if (attempt > 1)
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    logger.error("Error when waiting", e);
+                }
             try {
                 parse(webClient, page);
             } catch (IOException e) {
                 logger.error("Error when parsing", e);
             } finally {
                 isRunning = false;
-                logger.info("end parser");
             }
         }
 
+        logger.info("end parser");
         return null;
     }
 
@@ -117,6 +135,8 @@ public class ParserService {
 
             String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
             String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
+
+            String time = ((HtmlTableDataCell) score.getByXPath("td[@class='time']").get(0)).getTextContent();
 
             currentNumber++;
             if (checkParsedMatches(currentDate, command1, command2)) {
@@ -190,7 +210,7 @@ public class ParserService {
             curCategory = sumZeros > 12 ? 1 : 2;
             category = Math.min(category, curCategory);
 
-            Match match = new Match(currentDate, command1, command2, category, totalZeros, totaZerosHT);
+            Match match = new Match(currentDate, command1, command2, category, totalZeros, totaZerosHT, time);
             repository.save(match);
         }
     }
