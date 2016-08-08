@@ -105,21 +105,23 @@ public class ParserService {
         while (totalNumber > currentNumber || currentNumber == 0) {
             logger.info("Attempt number "+attempt);
             attempt++;
-            if (attempt > 1)
+            if (attempt > 1){
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     logger.error("Error when waiting", e);
                 }
+            }
+
             try {
                 parse(webClient, page);
             } catch (IOException e) {
+
                 logger.error("Error when parsing", e);
-            } finally {
-                isRunning = false;
             }
         }
 
+        isRunning = false;
         logger.info("end parser");
         return null;
     }
@@ -128,6 +130,7 @@ public class ParserService {
         List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath("//tr[@class='tbg0' or @class='tbg1']");
         totalNumber = scores.size();
         logger.info("Total number of matches is " + scores.size());
+        currentNumber = 0;
         for (HtmlTableRow score : scores) {
             String id = score.getAttribute("id");
 
