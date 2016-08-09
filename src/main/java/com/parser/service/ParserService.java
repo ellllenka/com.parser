@@ -134,7 +134,7 @@ public class ParserService {
         for (HtmlTableRow score : scores) {
             String id = score.getAttribute("id");
 
-            //if (!id.substring(2).equals("1623419")) continue; //TODO DEBUG
+            //if (!id.substring(2).equals("1548293")) continue; //TODO DEBUG
 
             String command1 = ((HtmlAnchor) score.getByXPath("td[@class='home']/a").get(0)).getTextContent();
             String command2 = ((HtmlAnchor) score.getByXPath("td[@class='away']/a").get(0)).getTextContent();
@@ -157,7 +157,7 @@ public class ParserService {
             for (HtmlTableRow sr : scoresRow) {
                 if (checkClass(sr)) continue;
                 if (checkYears(sr, 3)) { //исключили матчи старше 3 лет
-                    if (!sr.getCell(3).getTextContent().equals("0-0")) {
+                    if (sr.getCell(3).getTextContent().equals("0-0")) {
                         sumZeroMatch++;
                         break;
                     }
