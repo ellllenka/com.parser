@@ -28,6 +28,9 @@ public class ParserController {
         service.startParsing();
     }
 
-
-
+    @RequestMapping(value = "/match", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void clearDB() throws IOException, ParseException {
+        service.clearDB();
+    }
 }

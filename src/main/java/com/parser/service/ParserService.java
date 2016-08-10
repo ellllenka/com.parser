@@ -79,6 +79,21 @@ public class ParserService {
         return result;
     }
 
+    private void waitIfNeed(int attempt){
+        if (attempt > 1){
+            try {
+                logger.error("Wait before retry");
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                logger.error("Error when waiting", e);
+            }
+        }
+    }
+
+    public void clearDB(){
+       repository.deleteAll();
+    }
+
     @Async
     public Future<Void> startParsing() throws ParseException {
         if (isRunning)
@@ -93,31 +108,24 @@ public class ParserService {
         HtmlPage page = null; // заходим на сайт
         do{
             try {
+                waitIfNeed(attempt);
                 logger.info("Opening main page, attempt "+attempt);
                 attempt++;
                 page = webClient.getPage("http://live2.7msport.com/");
             } catch (IOException e) {
-                logger.error("Error when opening main page", e);
+                logger.error("Error when opening main page ");
             }
         }while (page == null);
 
         attempt = 1;
         while (totalNumber > currentNumber || currentNumber == 0) {
-            logger.info("Attempt number "+attempt);
+            waitIfNeed(attempt);
             attempt++;
-            if (attempt > 1){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    logger.error("Error when waiting", e);
-                }
-            }
-
+            logger.info("Attempt number "+attempt);
             try {
                 parse(webClient, page);
             } catch (IOException e) {
-
-                logger.error("Error when parsing", e);
+                logger.error("Error when parsing ");
             }
         }
 

@@ -2,10 +2,13 @@
     <div class="row">
         <div class="col-lg-2">Category 1</div>
         <input type="text" placeholder="Text input" class="col-lg-4" ng-model="$ctrl.query">
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             <a ng-click="$ctrl.startParsing()" href="">Start parsing</a>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-2">
+            <a ng-click="$ctrl.clearDB()" href="">Clear DB</a>
+        </div>
+        <div class="col-lg-2">
             <a ng-click="$ctrl.exportData()" href="">Save to Excel</a>
         </div>
     </div>

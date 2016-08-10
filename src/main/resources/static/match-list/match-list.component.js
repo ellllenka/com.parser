@@ -26,5 +26,9 @@ angular.module('matchList').component('matchList', {
 
             saveAs(cat2, "Category2.xls");
         };
+
+        this.clearDB = function () {
+            $http({method: 'DELETE', url: '/match'});
+        }
     }]
 });
