@@ -58,10 +58,8 @@ public class ParserService {
 
     private HashMap<String, Integer> calcZeroResults(List<HtmlTableRow> scoresRows) {
         int zerosInFirstTime = 0, zerosInMatch = 0;
-
         for (HtmlTableRow srt : scoresRows) {
             if (checkClass(srt)) continue;
-            //if (checkYears(srt, 3)) {
             if (srt.getCell(3).getTextContent().equals("0-0")) {
                 zerosInMatch++;
             }
@@ -69,7 +67,6 @@ public class ParserService {
             if (srt.getCell(10).getTextContent().equals("0-0")) {
                 zerosInFirstTime++;
             }
-            //}
         }
 
         HashMap<String, Integer> result = new HashMap<>();
