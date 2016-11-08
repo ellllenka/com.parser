@@ -11,7 +11,8 @@ angular.module('matchList').component('matchList', {
         this.secondCategory = Match.query({category: 2});
 
         this.startParsing = function(){
-            $http({method: 'GET', url: '/match'}).then(function(){}, function(){});
+            //$http({method: 'PUT', url: '/match', {number: "number"}}).then(function(){}, function(){});
+            $http.put('/match', this.number).then(function(){}, function(){});
         };
 
         this.exportData = function () {
@@ -32,3 +33,7 @@ angular.module('matchList').component('matchList', {
         }
     }]
 });
+
+/*
+ $http.put('/api/v1/users/' + user.login, { login: "login", password: "password" });
+ */

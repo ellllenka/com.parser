@@ -35,6 +35,8 @@ public class ParserService {
     private int totalNumber;
     private int currentNumber;
 
+    private int number;
+
     private boolean checkClass(HtmlTableRow sr) {
         return !sr.getAttribute("class").equals("sjt1") &&
                 !sr.getAttribute("class").equals("sjt2") &&
@@ -92,7 +94,7 @@ public class ParserService {
     }
 
     @Async
-    public Future<Void> startParsing() throws ParseException {
+    public Future<Void> startParsing(Integer number) throws ParseException {
         if (isRunning)
             return null;
 
@@ -120,7 +122,7 @@ public class ParserService {
             attempt++;
             logger.info("Attempt number "+attempt);
             try {
-                parse(webClient, page);
+                parse(webClient, page, number);
             } catch (IOException e) {
                 logger.error("Error when parsing ");
             }
@@ -131,7 +133,7 @@ public class ParserService {
         return null;
     }
 
-    private void parse(WebClient webClient, HtmlPage page) throws IOException, ParseException {
+    private void parse(WebClient webClient, HtmlPage page, Integer number) throws IOException, ParseException {
         List<HtmlTableRow> scores = (List<HtmlTableRow>) page.getByXPath("//tr[@class='tbg0' or @class='tbg1']");
         totalNumber = scores.size();
         logger.info("Total number of matches is " + scores.size());
@@ -193,7 +195,7 @@ public class ParserService {
 
             int sumZeros = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime");
 
-            int curCategory = sumZeros > 12 ? 1 : 2;
+            int curCategory = sumZeros > number ? 1 : 2;
             category = Math.min(category, curCategory);
 
             List<HtmlTableRow> scoresRowTotal2 = ((List<HtmlTableRow>) page1.getByXPath("//Table[@id='tbTeamHistory_B_all']//tr")); // 2-й шаг
@@ -215,7 +217,7 @@ public class ParserService {
             int totaZerosHT = zerosInAllMatches1.get("zerosInFirstTime") + zerosInHomeMatches.get("zerosInFirstTime") +
                     zerosInAllMatches2.get("zerosInFirstTime") + zerosInAwayMatches.get("zerosInFirstTime") + sumZero1stTime1;
 
-            curCategory = sumZeros > 12 ? 1 : 2;
+            curCategory = sumZeros > number ? 1 : 2;
             category = Math.min(category, curCategory);
 
             Match match = new Match(currentDate, command1, command2, category, totalZeros, totaZerosHT, time);

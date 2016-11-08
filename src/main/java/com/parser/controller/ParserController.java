@@ -2,19 +2,23 @@ package com.parser.controller;
 
 import com.parser.domain.Match;
 import com.parser.service.ParserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 @Controller
 public class ParserController {
     @Autowired
     ParserService service;
+
+    private static final Logger logger = LoggerFactory.getLogger(ParserController.class);
+
     @RequestMapping(value = "/matches/{category}", method = RequestMethod.GET)
     @ResponseBody
     public List<Match> getMatches (@PathVariable Integer category) {
@@ -22,10 +26,11 @@ public class ParserController {
         return service.getMatches(category, date);
     }
 
-    @RequestMapping(value = "/match", method = RequestMethod.GET)
+    @RequestMapping(value = "/match", method = RequestMethod.PUT)
     @ResponseBody
-    public void startParsing() throws IOException, ParseException {
-        service.startParsing();
+    public void startParsing(@RequestBody String number) throws IOException, ParseException {
+        logger.info("parsing is starting, number = "+number);
+        service.startParsing(Integer.parseInt(number));
     }
 
     @RequestMapping(value = "/match", method = RequestMethod.DELETE)
